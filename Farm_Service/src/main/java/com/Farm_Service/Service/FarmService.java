@@ -18,35 +18,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FarmService {
 
-    private  final FarmRepo farmRepo;
+    private final FarmRepo farmRepo;
     private final FarmMapper farmMapper;
     private final AuthClient authClient;
 
-    public FarmResponse createFarm(FarmRequest farmRequest){
-
-        AuthResponse auth=authClient.getAuthById(farmRequest.authId());
-
-        if(auth==null){
-            throw new ResourceNotFoundException("User not found",farmRequest.authId());
+    public FarmResponse createFarm(FarmRequest farmRequest) {
+        AuthResponse auth = authClient.getAuthById(farmRequest.authId());
+        if (auth == null) {
+            throw new ResourceNotFoundException("User", farmRequest.authId());
         }
-        FarmEntity farm=farmMapper.toRequest(farmRequest);
+        FarmEntity farm = farmMapper.toRequest(farmRequest);
         farm.setAuthId(auth.authId());
-        FarmEntity saved=farmRepo.save(farm);
+        FarmEntity saved = farmRepo.save(farm);
         return farmMapper.toResponse(saved);
     }
 
     public FarmResponse getFarmById(Long farmId) {
-
         FarmEntity farm = farmRepo.findById(farmId)
-                .orElseThrow(() -> new RuntimeException(
-                        "Farm not found with id: " + farmId
-                ));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Farm", farmId));
         return farmMapper.toResponse(farm);
     }
 
     public List<FarmResponse> getAllFarms() {
-
         return farmRepo.findAll()
                 .stream()
                 .map(farmMapper::toResponse)
@@ -54,7 +47,6 @@ public class FarmService {
     }
 
     public List<FarmResponse> getFarmsByAuthId(Long authId) {
-
         return farmRepo.findByAuthId(authId)
                 .stream()
                 .map(farmMapper::toResponse)
@@ -62,33 +54,22 @@ public class FarmService {
     }
 
     public FarmResponse updateFarm(FarmRequest farmRequest, Long farmId) {
-        FarmEntity farm=farmRepo.findById(farmId)
-                .orElseThrow(()-> new ResourceNotFoundException("Farm not found with id :", farmId));
-        farmMapper.updateFarm(farmRequest,farm);
-        FarmEntity update=farmRepo.save(farm);
-        return farmMapper.toResponse(update);
+        FarmEntity farm = farmRepo.findById(farmId)
+                .orElseThrow(() -> new ResourceNotFoundException("Farm", farmId));
+        farmMapper.updateFarm(farmRequest, farm);
+        FarmEntity updated = farmRepo.save(farm);
+        return farmMapper.toResponse(updated);
     }
 
     public void deleteFarm(Long farmId) {
-
         FarmEntity farm = farmRepo.findById(farmId)
-                .orElseThrow(() -> new RuntimeException(
-                        "Farm not found with id: " + farmId
-                ));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Farm", farmId));
         farmRepo.delete(farm);
     }
 
     public FarmLocationResponse getFarmLocation(Long farmId) {
-
-        FarmEntity farm =
-                farmRepo.findById(farmId)
-                        .orElseThrow(() ->
-                                new ResourceNotFoundException(
-                                        "Farm not found",
-                                        farmId
-                                )
-                        );
+        FarmEntity farm = farmRepo.findById(farmId)
+                .orElseThrow(() -> new ResourceNotFoundException("Farm", farmId));
 
         return new FarmLocationResponse(
                 farm.getFarmId(),

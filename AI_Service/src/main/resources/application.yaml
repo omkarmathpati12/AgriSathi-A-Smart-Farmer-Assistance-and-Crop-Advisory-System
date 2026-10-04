@@ -1,0 +1,35 @@
+server:
+  port: 8085
+
+jwt:
+  secret: ${JWT_SECRET}
+
+spring:
+  application:
+    name: AI-SERVICE
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ai_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=Asia/Kolkata
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY:dummy_gemini_api_key}
+        chat:
+          options:
+            model: gemini-2.5-flash
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true

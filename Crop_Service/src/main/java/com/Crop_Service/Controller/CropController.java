@@ -1,13 +1,17 @@
 package com.Crop_Service.Controller;
 
 import com.Crop_Service.Dto.CropRequest;
+import com.Crop_Service.Dto.CropResponse;
 import com.Crop_Service.Enums.CropName;
 import com.Crop_Service.Enums.Status;
 import com.Crop_Service.Service.CropService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,105 +20,66 @@ public class CropController {
 
     private final CropService cropService;
 
-    @PostMapping
-    public ResponseEntity<?> create(
-            @RequestBody CropRequest cropRequest) {
+//    @PostMapping("/create")
+//    public ResponseEntity<CropResponse> create(@Valid @RequestBody CropRequest cropRequest) {
+//        return ResponseEntity.status(HttpStatus.CREATED).body(cropService.create(cropRequest));
+//    }
+
+    @PostMapping({"", "/create"})
+    public ResponseEntity<CropResponse> create(
+            @Valid @RequestBody CropRequest request) {
+
+        System.out.println("🔥🔥🔥 CROP CONTROLLER HIT 🔥🔥🔥");
+        System.out.println("Farm ID: " + request.farmId());
+        System.out.println("Crop Name: " + request.cropName());
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(cropService.create(cropRequest));
+                .body(cropService.create(request));
     }
 
-
-    // Get Crop By ID
     @GetMapping("/{cropId}")
-    public ResponseEntity<?> getById(
-            @PathVariable Long cropId) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(cropService.getById(cropId));
+    public ResponseEntity<CropResponse> getById(@PathVariable Long cropId) {
+        return ResponseEntity.ok(cropService.getById(cropId));
     }
 
-
-    // Get All Crops
     @GetMapping
-    public ResponseEntity<?> getAll() {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(cropService.getAll());
+    public ResponseEntity<List<CropResponse>> getAll() {
+        return ResponseEntity.ok(cropService.getAll());
     }
 
-
-    // Get Crops By Farm ID
     @GetMapping("/farm/{farmId}")
-    public ResponseEntity<?> getByFarmId(
-            @PathVariable Long farmId) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(cropService.getByFarmId(farmId));
+    public ResponseEntity<List<CropResponse>> getByFarmId(@PathVariable Long farmId) {
+        return ResponseEntity.ok(cropService.getByFarmId(farmId));
     }
 
-
-    // Get Crops By Status
     @GetMapping("/status/{status}")
-    public ResponseEntity<?> getByStatus(
-            @PathVariable Status status) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(cropService.getByStatus(status));
+    public ResponseEntity<List<CropResponse>> getByStatus(@PathVariable Status status) {
+        return ResponseEntity.ok(cropService.getByStatus(status));
     }
 
-
-    // Get Crops By Name
     @GetMapping("/name/{cropName}")
-    public ResponseEntity<?> getByCropName(
-            @PathVariable CropName cropName) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(cropService.getByCropName(cropName));
+    public ResponseEntity<List<CropResponse>> getByCropName(@PathVariable CropName cropName) {
+        return ResponseEntity.ok(cropService.getByCropName(cropName));
     }
 
-
-    // Update Crop
     @PutMapping("/{cropId}")
-    public ResponseEntity<?> update(
+    public ResponseEntity<CropResponse> update(
             @PathVariable Long cropId,
-            @RequestBody CropRequest cropRequest) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(cropService.update(cropId, cropRequest));
+            @Valid @RequestBody CropRequest cropRequest) {
+        return ResponseEntity.ok(cropService.update(cropId, cropRequest));
     }
 
-
-    // Delete Crop
     @DeleteMapping("/{cropId}")
-    public ResponseEntity<?> delete(
-            @PathVariable Long cropId) {
-
+    public ResponseEntity<Void> delete(@PathVariable Long cropId) {
         cropService.delete(cropId);
-
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
+        return ResponseEntity.noContent().build();
     }
 
-
-    // Change Crop Status
     @PutMapping("/{cropId}/status")
-    public ResponseEntity<?> changeStatus(
+    public ResponseEntity<CropResponse> changeStatus(
             @PathVariable Long cropId,
             @RequestParam Status status) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(cropService.changeStatus(cropId, status));
+        return ResponseEntity.ok(cropService.changeStatus(cropId, status));
     }
-
-
 }

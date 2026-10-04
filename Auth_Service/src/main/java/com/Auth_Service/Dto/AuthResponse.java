@@ -11,5 +11,6 @@ public record AuthResponse(Long authId,
                            String phone,
                            Role role,
                            Status status,
-                           LocalDateTime createdAt) {
+                           LocalDateTime createdAt,
+                           String token) {
 }

@@ -1,12 +1,16 @@
 package com.Auth_Service.Controller;
 
 import com.Auth_Service.Dto.AuthRequest;
+import com.Auth_Service.Dto.AuthResponse;
+import com.Auth_Service.Dto.LoginRequest;
 import com.Auth_Service.Enums.Role;
 import com.Auth_Service.Service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -16,81 +20,53 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AuthRequest authRequest){
+    public ResponseEntity<AuthResponse> register(@RequestBody AuthRequest authRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(authRequest));
     }
 
-    @GetMapping("/{authId}")
-    public ResponseEntity<?> getById(@PathVariable Long authId) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(authService.getById(authId));
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(authService.login(loginRequest));
     }
 
+    @GetMapping("/{authId}")
+    public ResponseEntity<AuthResponse> getById(@PathVariable Long authId) {
+        return ResponseEntity.ok(authService.getById(authId));
+    }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<?> getByEmail(@PathVariable String email) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(authService.getByEmail(email));
+    public ResponseEntity<AuthResponse> getByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(authService.getByEmail(email));
     }
-
 
     @GetMapping
-    public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(authService.getAllUsers());
+    public ResponseEntity<List<AuthResponse>> getAllUsers() {
+        return ResponseEntity.ok(authService.getAllUsers());
     }
-
 
     @PutMapping("/{authId}")
-    public ResponseEntity<?> update(
-            @PathVariable Long authId,
-            @RequestBody AuthRequest authRequest) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(authService.update(authId, authRequest));
+    public ResponseEntity<AuthResponse> update(@PathVariable Long authId, @RequestBody AuthRequest authRequest) {
+        return ResponseEntity.ok(authService.update(authId, authRequest));
     }
-
-
 
     @DeleteMapping("/{authId}")
-    public ResponseEntity<?> delete(@PathVariable Long authId) {
-
+    public ResponseEntity<Void> delete(@PathVariable Long authId) {
         authService.delete(authId);
-
-        return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .build();
+        return ResponseEntity.noContent().build();
     }
-
-
 
     @PutMapping("/{authId}/activate")
-    public ResponseEntity<?> activate(@PathVariable Long authId) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(authService.activate(authId));
+    public ResponseEntity<AuthResponse> activate(@PathVariable Long authId) {
+        return ResponseEntity.ok(authService.activate(authId));
     }
-
 
     @PutMapping("/{authId}/deactivate")
-    public ResponseEntity<?> deactivate(@PathVariable Long authId) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(authService.deactivate(authId));
+    public ResponseEntity<AuthResponse> deactivate(@PathVariable Long authId) {
+        return ResponseEntity.ok(authService.deactivate(authId));
     }
 
-
     @PutMapping("/{authId}/role")
-    public ResponseEntity<?> changeRole(@PathVariable Long authId,@RequestParam Role role) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(authService.changeRole(authId, role));
+    public ResponseEntity<AuthResponse> changeRole(@PathVariable Long authId, @RequestParam Role role) {
+        return ResponseEntity.ok(authService.changeRole(authId, role));
     }
 }

@@ -12,7 +12,9 @@ public interface AuthMapper {
 
     AuthEntity toRequest(AuthRequest authRequest);
 
-    @Mapping(source = "authId",target = "authId")
+    @Mapping(source = "authId", target = "authId")
+    @Mapping(target = "token", ignore = true)
     AuthResponse toResponse(AuthEntity authEntity);
+
     void updateAuth(AuthRequest authRequest, @MappingTarget AuthEntity authEntity);
 }

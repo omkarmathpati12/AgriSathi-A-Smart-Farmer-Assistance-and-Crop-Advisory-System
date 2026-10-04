@@ -1,7 +1,12 @@
 package com.Crop_Service.Exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String message, Object value) {
-        super(message.replace("{}",String.valueOf(value)));
+
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+
+    public ResourceNotFoundException(String resourceName, Object id) {
+        super(resourceName + " not found with id: " + id);
     }
 }
