@@ -9,9 +9,9 @@ spring:
     name: AI-SERVICE
 
   datasource:
-    url: jdbc:mysql://localhost:3306/ai_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=Asia/Kolkata
-    username: root
-    password: root
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/ai_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=Asia/Kolkata
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

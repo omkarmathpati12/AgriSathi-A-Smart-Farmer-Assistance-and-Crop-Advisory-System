@@ -86,9 +86,7 @@ public class SecurityConfig {
 
         // React / Angular frontend
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:3000",
-                "http://localhost:5173",
-                "http://localhost:4200"
+                "http://localhost:5175"
         ));
 
         configuration.setAllowedMethods(List.of(
